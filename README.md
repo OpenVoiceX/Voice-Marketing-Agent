@@ -191,6 +191,7 @@ Thanks to these wonderful people:
 <a href="https://github.com/Hiteshydv001/Voice-Marketing-Agent/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Hiteshydv001/Voice-Marketing-Agent" />
 </a>
+- [Kalavakuri Gopika](https://github.com/Kalavakuri-gopika) 🌟
 
 
 ## 📜 Code of Conduct
