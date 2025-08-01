@@ -184,13 +184,14 @@ This project is a solid foundation, but our vision is much bigger. Here’s a sn
     *   **Kubernetes & Helm Charts:** Production-grade deployment scripts for auto-scaling on the cloud.
     *   **Comprehensive Analytics Dashboard:** Visualize call success rates, conversation paths, and more.
        
-
+🙋 Want to be listed here? Make your first PR! Once merged, your profile will show up automatically via GitHub activity.
 ## 🌟 Contributors
 Thanks to these wonderful people:
 
 <a href="https://github.com/Hiteshydv001/Voice-Marketing-Agent/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Hiteshydv001/Voice-Marketing-Agent" />
 </a>
+[Kalavakuri Gopika](https://github.com/Kalavakuri-gopika) 🌟
 
 
 ## 📜 Code of Conduct
