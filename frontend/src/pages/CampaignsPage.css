@@ -1,0 +1,125 @@
+/* frontend/src/pages/CampaignsPage.css */
+
+.campaign-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.campaign-table th, .campaign-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.campaign-table th {
+  background-color: var(--background-color);
+  font-weight: 600;
+}
+
+.campaign-table tr:last-child td {
+  border-bottom: none;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+  text-transform: capitalize;
+}
+
+.status-draft { background-color: #6c757d; }
+.status-running { background-color: #28a745; }
+.status-paused { background-color: #ffc107; color: #333; }
+.status-completed { background-color: #17a2b8; }
+
+.action-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  margin-right: 15px;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.delete-link {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0;
+  font-size: inherit;
+}
+
+.delete-link:hover {
+  color: #c82333;
+  text-decoration: underline;
+}
+
+/* Modal Styling */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #aaa;
+}
+.modal-close-button:hover {
+  color: #333;
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal {
+  text-align: center;
+  padding: 2rem;
+}
+
+.confirmation-modal h3 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.confirmation-modal p {
+  margin-bottom: 2rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.modal-actions button {
+  min-width: 100px;
+}

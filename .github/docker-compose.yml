@@ -11,7 +11,8 @@ services:
       - shared_audio:/app/audio_files
     env_file:
       - .env
-    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000
+    mem_limit: 4g
     depends_on:
       # The API now only explicitly waits for the database.
       # It will wait for Ollama in its own code.

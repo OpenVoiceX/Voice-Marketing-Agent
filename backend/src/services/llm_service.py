@@ -1,4 +1,3 @@
-# backend/src/services/llm_service.py
 import ollama
 import time
 from ..core.config import settings
@@ -8,10 +7,12 @@ class LLMService:
 
     def __init__(self):
         self.client = None
-        # This correctly reads 'tinylama' from your .env file
         self.model_name = settings.LLM_MODEL_NAME
         
-        # ... (the resilient connection logic remains the same) ...
+        self._connect_to_ollama()
+        self._ensure_model_is_available()
+
+    def _connect_to_ollama(self):
         max_retries = 15
         retry_delay = 10
         for attempt in range(max_retries):
@@ -29,6 +30,22 @@ class LLMService:
                 time.sleep(retry_delay)
         raise ConnectionError("Failed to connect to the Ollama service after multiple attempts.")
 
+    def _ensure_model_is_available(self):
+        try:
+            print(f"Checking for model '{self.model_name}'...")
+            models = self.client.list().get('models', [])
+            if any(isinstance(model, dict) and model.get('name') == self.model_name for model in models):
+                print(f"✅ Model '{self.model_name}' is available.")
+                return
+
+            print(f"⚠️ Model '{self.model_name}' not found. Pulling it now...")
+            self.client.pull(self.model_name)
+            print(f"✅ Successfully pulled model '{self.model_name}'.")
+
+        except Exception as e:
+            print(f"❌ Failed to ensure model availability. Error: {e}")
+            raise
+
     def get_response(self, messages):
         """Gets a chat completion from the Ollama model."""
         if not self.client:
@@ -36,10 +53,7 @@ class LLMService:
             
         try:
             response = self.client.chat(
-                # --- THIS IS THE CRITICAL FIX ---
-                # Changed from a hardcoded "mistral" to the configured model name
                 model=self.model_name,
-                # ---------------------------------
                 messages=messages
             )
             return response['message']['content']

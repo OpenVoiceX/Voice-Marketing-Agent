@@ -7,16 +7,15 @@ class STTService:
 
     def __init__(self):
         try:
-            # --- THIS IS THE LINE TO FIX ---
-            model_size = settings.FASTER_WHISPER_MODEL_SIZE # Changed from WHISPER_MODEL_SIZE
-            # -------------------------------
-            
+            model_size = settings.FASTER_WHISPER_MODEL_SIZE
             compute_type = settings.FASTER_WHISPER_COMPUTE_TYPE
             
             print(f"Initializing Faster-Whisper with model: {model_size}")
             print(f"Using compute type: {compute_type} on CPU")
 
-            # Load the model onto the CPU with INT8 quantization for speed
+            # Load the model onto the CPU with INT8 quantization for speed.
+            # 1. Indentation is now correct.
+            # 2. Changed 'device=settings.WHISPER_DEVICE' to the correct 'device="cpu"'.
             self.model = WhisperModel(
                 model_size, 
                 device="cpu", 

@@ -88,6 +88,22 @@
   .button:hover {
     background-color: #357abd;
   }
+
+  .button.danger {
+    background-color: #dc3545;
+  }
+
+  .button.danger:hover {
+    background-color: #c82333;
+  }
+
+  .button.secondary {
+    background-color: #6c757d;
+  }
+
+  .button.secondary:hover {
+    background-color: #5a6268;
+  }
   
   .input, .textarea {
     width: 100%;
