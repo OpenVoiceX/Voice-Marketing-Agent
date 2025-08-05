@@ -14,17 +14,21 @@ const useCampaignStore = create((set, get) => ({
       const response = await campaignApi.getCampaigns();
       set({ campaigns: response.data, loading: false });
     } catch (error) {
+      console.error('Error fetching campaigns:', error);
       set({ error: error.message, loading: false });
     }
   },
 
   fetchCampaignById: async (id) => {
-    set({ loading: true, error: null, currentCampaign: null });
+    console.log('Store: fetchCampaignById called with ID:', id);
+    set({ loading: true, error: null });
     try {
       const response = await campaignApi.getCampaignById(id);
-      set({ currentCampaign: response.data, loading: false });
+      console.log('Store: Campaign data received:', response.data);
+      set({ currentCampaign: response.data, loading: false, error: null });
     } catch (error) {
-      set({ error: error.message, loading: false });
+      console.error('Store: Error fetching campaign by ID:', error);
+      set({ error: error.message, loading: false, currentCampaign: null });
     }
   },
 
@@ -32,25 +36,21 @@ const useCampaignStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       await campaignApi.createCampaign(campaignData);
-      // After creating, refetch the list to show the new campaign
       await get().fetchCampaigns();
     } catch (error) {
       set({ error: error.message, loading: false });
     }
   },
 
-  // --- NEW: Delete Campaign Action ---
   deleteCampaign: async (id) => {
     set({ loading: true, error: null });
     try {
       await campaignApi.deleteCampaign(id);
-      // After deleting, refetch the list to update the UI
       await get().fetchCampaigns();
     } catch (error) {
       set({ error: error.message, loading: false });
     }
   },
-  // ----------------------------------
 }));
 
 export default useCampaignStore;

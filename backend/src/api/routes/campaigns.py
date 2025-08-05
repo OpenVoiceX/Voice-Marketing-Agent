@@ -36,6 +36,15 @@ def read_campaign(campaign_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Campaign not found")
     return db_campaign
 
+@router.get("/{campaign_id}/status")
+def get_campaign_status(campaign_id: int, db: Session = Depends(get_db)):
+    """Get detailed status of a campaign including contact call statuses."""
+    try:
+        status_info = campaign_service.get_campaign_status(db, campaign_id)
+        return status_info
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
 @router.post("/{campaign_id}/contacts", status_code=status.HTTP_201_CREATED)
 async def add_contacts_from_csv(campaign_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
     db_campaign = db.query(campaign_model.Campaign).filter(campaign_model.Campaign.id == campaign_id).first()
@@ -82,8 +91,8 @@ def start_campaign(campaign_id: int, db: Session = Depends(get_db)):
     
     try:
         # Use the campaign service to actually start making calls
-        campaign_service.run_campaign(db, campaign_id)
-        return {"message": f"Campaign {campaign_id} started successfully. Initiating calls to {len(db_campaign.contacts)} contacts."}
+        result = campaign_service.run_campaign(db, campaign_id)
+        return result
     except Exception as e:
         # If there's an error with Twilio or other services, still update the status
         db_campaign.status = "running"

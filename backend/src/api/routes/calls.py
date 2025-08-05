@@ -18,7 +18,7 @@ from ...services.stt_service import STTService
 from ...services.tts_service import TTSService
 from ...services.telephony_service import twilio_service
 from ...agents.appointment_setter.logic import AppointmentSetterAgent
-from ...models import agent as agent_model
+from ...models import agent as agent_model, campaign as campaign_model
 
 router = APIRouter()
 
@@ -56,15 +56,35 @@ async def call_webhook(
     # Twilio sends speech recognition results in the 'SpeechResult' field
     SpeechResult: str = Form(None), 
     # Twilio sends the Call SID with a capital 'S'
-    CallSid: str = Form(...) 
+    CallSid: str = Form(...),
+    # Twilio sends call status updates
+    CallStatus: str = Form(None),
+    To: str = Form(None)
 ):
     """
     Main webhook to handle call progression. Now returns proper TwiML.
     """
     print(f"--- WEBHOOK TRIGGERED for CallSid: {CallSid} ---")
+    print(f"Call Status: {CallStatus}, To: {To}")
     response = VoiceResponse()
 
     try:
+        # Update contact status based on call status
+        if To and CallStatus:
+            contact = db.query(campaign_model.Contact).filter(
+                campaign_model.Contact.phone_number == To
+            ).first()
+            
+            if contact:
+                if CallStatus in ['completed', 'answered']:
+                    contact.status = 'completed'
+                elif CallStatus in ['failed', 'busy', 'no-answer']:
+                    contact.status = 'failed'
+                elif CallStatus == 'in-progress':
+                    contact.status = 'calling'
+                db.commit()
+                print(f"Updated contact {To} status to {contact.status}")
+
         db_agent = db.query(agent_model.Agent).filter(agent_model.Agent.id == agent_id).first()
         if not db_agent:
             print(f"❌ ERROR: Agent with ID {agent_id} not found in webhook.")

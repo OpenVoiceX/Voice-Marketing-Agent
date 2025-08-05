@@ -1,11 +1,12 @@
 // frontend/src/components/CampaignList.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useCampaignStore from '../store/campaignStore';
 import ConfirmationModal from './common/ConfirmationModal';
 
 const CampaignList = ({ campaigns }) => {
   const { deleteCampaign } = useCampaignStore();
+  const navigate = useNavigate();
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, campaignId: null, campaignName: '' });
 
   const handleDeleteClick = (campaignId, campaignName) => {
@@ -21,6 +22,12 @@ const CampaignList = ({ campaigns }) => {
 
   const handleDeleteCancel = () => {
     setDeleteModal({ isOpen: false, campaignId: null, campaignName: '' });
+  };
+
+  const handleViewClick = (campaignId) => {
+    console.log('View button clicked for campaign ID:', campaignId);
+    console.log('Navigating to:', `/campaigns/${campaignId}`);
+    navigate(`/campaigns/${campaignId}`);
   };
 
   if (campaigns.length === 0) {
@@ -52,7 +59,13 @@ const CampaignList = ({ campaigns }) => {
                 </td>
                 <td>{campaign.contacts.length}</td>
                 <td className="actions-cell">
-                  <Link to={`/campaigns/${campaign.id}`} className="action-link">View</Link>
+                  <button 
+                    onClick={() => handleViewClick(campaign.id)}
+                    className="action-link"
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)' }}
+                  >
+                    View
+                  </button>
                   <button 
                     onClick={() => handleDeleteClick(campaign.id, campaign.name)}
                     className="action-link delete-link"
