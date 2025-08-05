@@ -1,19 +1,32 @@
 """
 Pytest configuration and shared fixtures for the testing suite.
+Simplified for Windows compatibility.
 """
 import pytest
 import tempfile
 import os
+import sys
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from fastapi.testclient import TestClient
 from unittest.mock import Mock, patch
 
-from src.main import app
-from src.core.database import Base, get_db
-from src.core.config import settings
-from src.models.agent import Agent
-from src.models.call import CallLog
+# Add the src directory to the Python path
+backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+src_dir = os.path.join(backend_dir, 'src')
+if src_dir not in sys.path:
+    sys.path.insert(0, src_dir)
+
+# Import after path setup
+try:
+    from src.main import app
+    from src.core.database import Base, get_db
+    from src.models.agent import Agent
+    from src.models.call import CallLog
+except ImportError as e:
+    print(f"Import error: {e}")
+    print(f"Current Python path: {sys.path}")
+    raise
 
 
 # --- Test Database Setup ---
@@ -22,7 +35,8 @@ def test_engine():
     """Create a test database engine using SQLite in memory."""
     engine = create_engine(
         "sqlite:///:memory:",
-        connect_args={"check_same_thread": False}
+        connect_args={"check_same_thread": False},
+        echo=False  # Set to True for SQL debugging
     )
     Base.metadata.create_all(bind=engine)
     return engine
@@ -38,8 +52,8 @@ def test_db(test_engine):
     finally:
         session.close()
         # Clean up all tables after each test
-        for table in reversed(Base.metadata.sorted_tables):
-            test_engine.execute(table.delete())
+        Base.metadata.drop_all(bind=test_engine)
+        Base.metadata.create_all(bind=test_engine)
 
 
 @pytest.fixture(scope="function")
@@ -57,64 +71,36 @@ def client(test_db):
     app.dependency_overrides.clear()
 
 
-# --- Mock Services ---
+# --- Mock Services (Fixed) ---
 @pytest.fixture
 def mock_llm_service():
     """Mock LLM service to avoid calling real Ollama."""
-    with patch('src.services.llm_service.LLMService') as mock:
-        mock_instance = Mock()
-        mock_instance.get_response.return_value = "This is a test AI response."
-        mock.return_value = mock_instance
-        yield mock_instance
+    mock_instance = Mock()
+    mock_instance.get_response.return_value = "This is a test AI response."
+    return mock_instance
 
 
-# One more fix needed - update the STT service import to match actual file
 @pytest.fixture
 def mock_stt_service():
     """Mock STT service to avoid loading Whisper model."""
-    with patch('src.services.stt_service.STTService') as mock:
-        mock_instance = Mock()
-        mock_instance.transcribe.return_value = "This is test transcribed text."
-        mock.return_value = mock_instance
-        yield mock_instance
-
-
-# Fix the config reference in the STT service file
-@pytest.fixture
-def mock_stt_service_fixed():
-    """Mock STT service with correct config references."""
-    with patch('src.services.stt_service.WhisperModel') as mock_whisper:
-        mock_instance = Mock()
-        mock_instance.transcribe.return_value = (
-            [Mock(text="This is test transcribed text.")], 
-            Mock(language="en", language_probability=0.9)
-        )
-        mock_whisper.return_value = mock_instance
-        
-        with patch('src.services.stt_service.settings') as mock_settings:
-            mock_settings.WHISPER_MODEL_SIZE = "base"
-            yield mock_instance
+    mock_instance = Mock()
+    mock_instance.transcribe.return_value = "This is test transcribed text."
+    return mock_instance
 
 
 @pytest.fixture
 def mock_tts_service():
-    """Mock TTS service to avoid loading Coqui TTS."""
-    with patch('src.services.tts_service.TTSService') as mock:
-        mock_instance = Mock()
-        mock_instance.synthesize.return_value = None  # Just pretend it worked
-        mock.return_value = mock_instance
-        yield mock_instance
+    """Mock TTS service to avoid loading TTS model."""
+    mock_instance = Mock()
+    mock_instance.synthesize.return_value = None
+    return mock_instance
 
 
 @pytest.fixture
 def temp_audio_dir():
     """Create a temporary directory for audio files during testing."""
     with tempfile.TemporaryDirectory() as temp_dir:
-        # Override the audio directory setting
-        original_audio_dir = settings.AUDIO_DIR
-        settings.AUDIO_DIR = temp_dir
         yield temp_dir
-        settings.AUDIO_DIR = original_audio_dir
 
 
 # --- Test Data Factories ---

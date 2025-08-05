@@ -1,18 +1,14 @@
-# Testing frameworks
-pytest>=7.4.0
-pytest-asyncio>=0.21.0
-pytest-mock>=3.11.0
-httpx>=0.24.0  # For testing FastAPI async endpoints
-factory-boy>=3.3.0  # For creating test data
-faker>=19.0.0  # For generating fake data
+pytest>=8.0.0
+pytest-asyncio>=0.24.0
+pytest-mock>=3.14.0
+httpx>=0.28.0
+factory-boy>=3.3.0
+faker>=22.0.0
 
 # Test coverage
-pytest-cov>=4.1.0
+pytest-cov>=4.0.0
 
 # Code quality
 black>=23.0.0
-isort>=5.12.0
+isort>=5.13.0
 flake8>=6.0.0
-
-# Database testing
-pytest-postgresql>=5.0.0  # For isolated test database
