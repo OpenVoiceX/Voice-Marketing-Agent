@@ -7,7 +7,8 @@ class STTService:
     def __init__(self):
         try:
             # FIXED: Corrected the typo from WISPHER_MODEL_SIZE to WHISPER_MODEL_SIZE
-            model_size = settings.WHISPER_MODEL_SIZE
+            model_size = settings.FASTER_WHISPER_MODEL_SIZE
+            
             compute_type = "int8"  # Use INT8 quantization for speed
             
             print(f"Initializing Faster-Whisper with model: {model_size}")
