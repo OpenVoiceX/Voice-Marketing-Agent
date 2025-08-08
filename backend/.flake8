@@ -1,0 +1,14 @@
+[flake8]
+max-line-length = 120
+exclude = 
+    .git,
+    __pycache__,
+    venv,
+    env,
+    .venv,
+    migrations,
+    .pytest_cache
+ignore = 
+    E203,  # whitespace before ':'
+    W503,  # line break before binary operator
+    F401   # imported but unused (common in __init__.py files)
