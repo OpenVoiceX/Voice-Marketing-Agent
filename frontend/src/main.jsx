@@ -1,4 +1,5 @@
 // frontend/src/main.jsx
+import CallLogTable from './components/CallLogTable.jsx';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
       { path: "agents", element: <AgentsPage /> },
       { path: "agents/:agentId", element: <AgentDetailPage /> },
       { path: "campaigns", element: <CampaignsPage /> },
+      { path: "calls", element: <CallLogTable /> },
       // --- ADD THIS NEW DYNAMIC ROUTE ---
       {
         path: "campaigns/:campaignId",

@@ -204,7 +204,9 @@ Thank you again for your interest. We can't wait to see what you build with us!
 
 ## 📜 License
 
-This project is freely available under the **MIT License**. See the `LICENSE` file for more information. <!-- This will be updated as PR is merged -->
+This project is freely available under the **MIT License**. See the [Licence](https://github.com/OpenVoiceX/Voice-Marketing-Agent/blob/main/LICENSE) file for more information. <!-- This will be updated as PR is merged -->
 
 ---
-<div align="center"> <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%"> <p>Built with ❤️ and a lot of coffee for GSSoC'25. Let's give the world a better way to talk to machines.</p> <img src="https://komarev.com/ghpvc/?username=Hiteshydv001-Voice-Marketing-Agent&label=Project%20Views&color=00BFFF&style=flat" alt="Project views" /> </div> ```
+<div align="center"><p>Built with ❤️ and a lot of coffee for GSSoC'25. Let's give the world a better way to talk to machines.</p>
+
+---

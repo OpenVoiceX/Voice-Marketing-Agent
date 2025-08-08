@@ -1,0 +1,38 @@
+/* SkeletonCard.css */
+.skeleton-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  width: 300px;
+  margin-bottom: 16px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.skeleton-avatar {
+  width: 50px;
+  height: 50px;
+  background-color: #ccc;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  background-color: #ccc;
+  border-radius: 4px;
+  margin-top: 12px;
+  animation: pulse 1.5s infinite;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}

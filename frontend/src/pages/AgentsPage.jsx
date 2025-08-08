@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import AgentForm from '../components/AgentForm';
 import useAgentStore from '../store/agentStore';
 import AgentCard from '../components/AgentCard'; // <-- IMPORT THE NEW COMPONENT
+import SkeletonCard from '../components/common/SkeletonCard';
 
 const AgentsPage = () => {
   const { agents, loading, error, fetchAgents } = useAgentStore();
@@ -20,7 +21,15 @@ const AgentsPage = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
         <div>
           <h2>Existing Agents</h2>
-          {loading && <p>Loading agents...</p>}
+          {loading && (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          )}
+
           {error && <p style={{ color: 'red' }}>Error: {error}</p>}
           
           {/* --- USE THE NEW AGENT CARD COMPONENT --- */}

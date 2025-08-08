@@ -1,0 +1,23 @@
+/* SkeletonTableRow.css */
+.skeleton-cell {
+  height: 16px;
+  background-color: #ccc;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+.skeleton-row td:nth-child(1) .skeleton-cell {
+  width: 100px;
+}
+
+.skeleton-row td:nth-child(2) .skeleton-cell {
+  width: 120px;
+}
+
+.skeleton-row td:nth-child(3) .skeleton-cell {
+  width: 140px;
+}
+
+.skeleton-row td:nth-child(4) .skeleton-cell {
+  width: 80px;
+}
