@@ -7,7 +7,7 @@ const useCampaignStore = create((set, get) => ({
   currentCampaign: null,
   loading: false,
   error: null,
-  
+
   fetchCampaigns: async () => {
     set({ loading: true, error: null });
     try {
@@ -19,8 +19,8 @@ const useCampaignStore = create((set, get) => ({
     }
   },
 
-  fetchCampaignById: async (id) => {
-    console.log('Store: fetchCampaignById called with ID:', id);
+  fetchCampaignDetails: async (id) => {
+    console.log('Store: fetchCampaignDetails called with ID:', id);
     set({ loading: true, error: null });
     try {
       const response = await campaignApi.getCampaignById(id);
@@ -37,6 +37,7 @@ const useCampaignStore = create((set, get) => ({
     try {
       await campaignApi.createCampaign(campaignData);
       await get().fetchCampaigns();
+      set({ loading: false });
     } catch (error) {
       set({ error: error.message, loading: false });
     }
@@ -47,10 +48,43 @@ const useCampaignStore = create((set, get) => ({
     try {
       await campaignApi.deleteCampaign(id);
       await get().fetchCampaigns();
+      set({ loading: false });
     } catch (error) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  startCampaign: async (id) => {
+    set({ loading: true, error: null });
+    try {
+      await campaignApi.startCampaign(id);
+      await get().fetchCampaigns();
+      // Optional: refetch the current campaign if it's the one being updated
+      if (get().currentCampaign?.id === id) {
+        await get().fetchCampaignDetails(id);
+      }
+      set({ loading: false });
+    } catch (error) {
+      console.error('Error starting campaign:', error);
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  stopCampaign: async (id) => {
+    set({ loading: true, error: null });
+    try {
+      await campaignApi.stopCampaign(id);
+      await get().fetchCampaigns();
+      if (get().currentCampaign?.id === id) {
+        await get().fetchCampaignDetails(id);
+      }
+      set({ loading: false });
+    } catch (error) {
+      console.error('Error stopping campaign:', error);
       set({ error: error.message, loading: false });
     }
   },
 }));
 
 export default useCampaignStore;
+A

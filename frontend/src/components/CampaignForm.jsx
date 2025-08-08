@@ -8,25 +8,44 @@ import Input from './common/Input';
 const CampaignForm = ({ onFormSubmit }) => {
   const [name, setName] = useState('');
   const [agentId, setAgentId] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
   const createCampaign = useCampaignStore((state) => state.createCampaign);
   const { agents, fetchAgents } = useAgentStore();
 
   useEffect(() => {
-    // Fetch agents to populate the dropdown
     fetchAgents();
   }, [fetchAgents]);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !agentId) return;
+    setError('');
     
-    await createCampaign({ name, agent_id: parseInt(agentId) });
-    onFormSubmit(); // Close the modal
+    if (!name || !agentId) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await createCampaign({ name, agent_id: parseInt(agentId) });
+      setName('');
+      setAgentId('');
+      onFormSubmit(); // Close modal or reset UI
+    } catch (err) {
+      setError('Failed to create campaign. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h2>Create New Campaign</h2>
+
+      {error && <p className="text-red-500 mb-2">{error}</p>}
+
       <Input
         label="Campaign Name"
         name="name"
@@ -34,7 +53,8 @@ const CampaignForm = ({ onFormSubmit }) => {
         onChange={(e) => setName(e.target.value)}
         required
       />
-      <div className="form-group">
+
+      <div className="form-group mb-4">
         <label htmlFor="agent_id">Select Agent</label>
         <select
           id="agent_id"
@@ -45,12 +65,21 @@ const CampaignForm = ({ onFormSubmit }) => {
           className="input"
         >
           <option value="" disabled>-- Choose an agent --</option>
-          {agents.map(agent => (
-            <option key={agent.id} value={agent.id}>{agent.name} (ID: {agent.id})</option>
-          ))}
+          {agents.length === 0 ? (
+            <option disabled>No agents available</option>
+          ) : (
+            agents.map(agent => (
+              <option key={agent.id} value={agent.id}>
+                {agent.name} (ID: {agent.id})
+              </option>
+            ))
+          )}
         </select>
       </div>
-      <Button type="submit">Create Campaign</Button>
+
+      <Button type="submit" disabled={submitting}>
+        {submitting ? 'Creating...' : 'Create Campaign'}
+      </Button>
     </form>
   );
 };

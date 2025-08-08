@@ -1,11 +1,16 @@
 // frontend/src/components/CampaignList.jsx
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useCampaignStore from '../store/campaignStore';
 import ConfirmationModal from './common/ConfirmationModal';
 
 const CampaignList = ({ campaigns }) => {
-  const { deleteCampaign } = useCampaignStore();
+  const {
+    deleteCampaign,
+    startCampaign,    // ✅ New
+    stopCampaign      // ✅ New
+  } = useCampaignStore();
+
   const navigate = useNavigate();
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, campaignId: null, campaignName: '' });
 
@@ -26,8 +31,15 @@ const CampaignList = ({ campaigns }) => {
 
   const handleViewClick = (campaignId) => {
     console.log('View button clicked for campaign ID:', campaignId);
-    console.log('Navigating to:', `/campaigns/${campaignId}`);
     navigate(`/campaigns/${campaignId}`);
+  };
+
+  const handleStartClick = async (campaignId) => {
+    await startCampaign(campaignId);
+  };
+
+  const handleStopClick = async (campaignId) => {
+    await stopCampaign(campaignId);
   };
 
   if (campaigns.length === 0) {
@@ -58,13 +70,27 @@ const CampaignList = ({ campaigns }) => {
                   </span>
                 </td>
                 <td>{campaign.contacts.length}</td>
-                <td className="actions-cell">
+                <td className="actions-cell space-x-1">
                   <button 
                     onClick={() => handleViewClick(campaign.id)}
                     className="action-link"
                     style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)' }}
                   >
                     View
+                  </button>
+                  <button 
+                    onClick={() => handleStartClick(campaign.id)}
+                    className="action-link"
+                    disabled={campaign.status === 'running'}
+                  >
+                    Start
+                  </button>
+                  <button 
+                    onClick={() => handleStopClick(campaign.id)}
+                    className="action-link"
+                    disabled={campaign.status === 'stopped'}
+                  >
+                    Stop
                   </button>
                   <button 
                     onClick={() => handleDeleteClick(campaign.id, campaign.name)}
