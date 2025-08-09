@@ -22,19 +22,20 @@ const CampaignForm = ({ onFormSubmit }) => {
     e.preventDefault();
     setError('');
     
-    if (!name || !agentId) {
+    if (!name.trim() || !agentId) {
       setError('Please fill in all fields.');
       return;
     }
 
     setSubmitting(true);
     try {
-      await createCampaign({ name, agent_id: parseInt(agentId) });
+      await createCampaign({ name: name.trim(), agent_id: parseInt(agentId, 10) });
       setName('');
       setAgentId('');
       onFormSubmit(); // Close modal or reset UI
     } catch (err) {
-      setError('Failed to create campaign. Please try again.');
+      const apiMsg = err?.response?.data?.detail || err?.message;
+      setError(apiMsg || 'Failed to create campaign. Please try again.');
     } finally {
       setSubmitting(false);
     }

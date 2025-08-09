@@ -53,11 +53,7 @@ export const addContactsToCampaign = (campaignId, file) => {
   const formData = new FormData();
   formData.append('file', file);
 
-  return apiClient.post(`/campaigns/${campaignId}/contacts/`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  return apiClient.post(`/campaigns/${campaignId}/contacts/`, formData);
 };
 
 // Optional: If needed
