@@ -38,14 +38,24 @@ def originate_call(request: OriginateCallRequest, db: Session = Depends(get_db))
         raise HTTPException(status_code=404, detail=f"Agent with ID {request.agent_id} not found.")
 
     try:
+        # UPDATE AGENT STATUS: Set to "calling" when call is initiated
+        db_agent.last_call_status = "calling"
+        db.commit()
+        
         result = twilio_service.originate_call(
             to_number=request.to_number,
             agent_id=request.agent_id
         )
         return result
     except ValueError as e:
+        # UPDATE AGENT STATUS: Set to "failed" if call initiation fails
+        db_agent.last_call_status = "failed"
+        db.commit()
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
+        # UPDATE AGENT STATUS: Set to "failed" if call initiation fails
+        db_agent.last_call_status = "failed"
+        db.commit()
         raise HTTPException(status_code=500, detail=f"Failed to initiate call. Error: {str(e)}")
 
 
@@ -69,6 +79,14 @@ async def call_webhook(
     response = VoiceResponse()
 
     try:
+        # Get the agent for status updates
+        db_agent = db.query(agent_model.Agent).filter(agent_model.Agent.id == agent_id).first()
+        if not db_agent:
+            print(f"❌ ERROR: Agent with ID {agent_id} not found in webhook.")
+            response.say("Sorry, an internal error occurred. Goodbye.")
+            response.hangup()
+            return Response(content=str(response), media_type="application/xml")
+
         # Update contact status based on call status
         if To and CallStatus:
             contact = db.query(campaign_model.Contact).filter(
@@ -78,19 +96,19 @@ async def call_webhook(
             if contact:
                 if CallStatus in ['completed', 'answered']:
                     contact.status = 'completed'
+                    # UPDATE AGENT STATUS: Set to "completed" when call completes successfully
+                    db_agent.last_call_status = "completed"
                 elif CallStatus in ['failed', 'busy', 'no-answer']:
                     contact.status = 'failed'
+                    # UPDATE AGENT STATUS: Set to "failed" when call fails
+                    db_agent.last_call_status = "failed"
                 elif CallStatus == 'in-progress':
                     contact.status = 'calling'
+                    # Keep agent status as "calling" while call is in progress
+                    db_agent.last_call_status = "calling"
                 db.commit()
                 print(f"Updated contact {To} status to {contact.status}")
-
-        db_agent = db.query(agent_model.Agent).filter(agent_model.Agent.id == agent_id).first()
-        if not db_agent:
-            print(f"❌ ERROR: Agent with ID {agent_id} not found in webhook.")
-            response.say("Sorry, an internal error occurred. Goodbye.")
-            response.hangup()
-            return Response(content=str(response), media_type="application/xml")
+                print(f"Updated agent {agent_id} status to {db_agent.last_call_status}")
 
         agent = AppointmentSetterAgent(llm_service=llm_service, system_prompt=db_agent.system_prompt)
         
@@ -119,6 +137,9 @@ async def call_webhook(
             
             if "goodbye" in ai_response_text.lower():
                 print("🏁 AI said goodbye, responding with Hangup.")
+                # UPDATE AGENT STATUS: Set to "completed" when conversation ends normally
+                db_agent.last_call_status = "completed"
+                db.commit()
                 response.hangup()
             else:
                 print("👂 Responding with Say and gathering next user input...")
@@ -133,6 +154,11 @@ async def call_webhook(
         print(f"🔥🔥🔥 UNEXPECTED ERROR IN WEBHOOK 🔥🔥🔥")
         print(f"Error: {e}")
         traceback.print_exc()
+        
+        # UPDATE AGENT STATUS: Set to "failed" on unexpected errors
+        if db_agent:
+            db_agent.last_call_status = "failed"
+            db.commit()
         
         # Respond with a safe error message to Twilio
         error_response = VoiceResponse()

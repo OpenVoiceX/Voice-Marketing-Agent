@@ -11,6 +11,8 @@ class AgentCreate(AgentBase):
 
 class Agent(AgentBase):
     id: int
+    # NEW FIELD: Include last_call_status in the response
+    last_call_status: str | None = "idle"
 
     class Config:
         from_attributes = True # Pydantic v2 name for orm_mode
