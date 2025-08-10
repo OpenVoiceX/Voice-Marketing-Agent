@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { originateCall } from '../services/callApi';
 import Button from './common/Button';
 import Input from './common/Input';
-import StatusBadge from './StatusBadge'; 
 
 const AgentCard = ({ agent }) => {
   const [toNumber, setToNumber] = useState('');
@@ -36,22 +35,7 @@ const AgentCard = ({ agent }) => {
 
   return (
     <div className="card" style={{ marginBottom: '1rem' }}>
-      {/* NEW: Add agent header with name and status */}
-      <div className="agent-header" style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'flex-start', 
-        marginBottom: '0.5rem',
-        flexWrap: 'wrap',
-        gap: '0.5rem'
-      }}>
-        <h3 style={{ margin: '0', flex: '1', minWidth: '0' }}>{agent.name}</h3>
-        <StatusBadge 
-          status={agent.last_call_status || 'idle'} 
-          lastCallTime={agent.last_call_time}
-        />
-      </div>
-      
+      <h3>{agent.name}</h3>
       <p><strong>Agent ID:</strong> {agent.id}</p>
       <div style={{ margin: '1rem 0' }}>
         <Input
