@@ -4,9 +4,10 @@ import threading
 import time
 import os
 from sqlalchemy.orm import Session
-from ..models import campaign as campaign_model
+from ..models import campaign as campaign_model, agent as agent_model
 from ..schemas import campaign as campaign_schema
 from .telephony_service import twilio_service
+from .agent_service import agent_service
 
 class CampaignService:
     def __init__(self):
@@ -50,6 +51,12 @@ class CampaignService:
                 print(f"Campaign {campaign_id} not found in _make_calls_sequentially")
                 return
 
+            # Get the agent for this campaign
+            agent = db.query(agent_model.Agent).filter(agent_model.Agent.id == campaign.agent_id).first()
+            if not agent:
+                print(f"Agent {campaign.agent_id} not found for campaign {campaign_id}")
+                return
+
             print(f"Starting sequential calls to {len(campaign.contacts)} contacts for campaign {campaign_id}")
             print(f"Mode: {'TEST (simulated)' if self.test_mode else 'LIVE'}")
             
@@ -59,6 +66,8 @@ class CampaignService:
                     
                     # Update contact status to calling
                     contact.status = "calling"
+                    # UPDATE AGENT STATUS: Set to "calling" when starting calls
+                    agent.last_call_status = "calling"
                     db.commit()
                     
                     if self.test_mode:
@@ -70,9 +79,13 @@ class CampaignService:
                         import random
                         if random.random() < 0.8:
                             contact.status = "completed"
+                            # UPDATE AGENT STATUS: Set to "completed" for successful test calls
+                            agent.last_call_status = "completed"
                             print(f"✅ TEST MODE: Call completed successfully for {contact.phone_number}")
                         else:
                             contact.status = "failed"
+                            # UPDATE AGENT STATUS: Set to "failed" for failed test calls
+                            agent.last_call_status = "failed"
                             print(f"❌ TEST MODE: Call failed for {contact.phone_number}")
                         
                         db.commit()
@@ -84,9 +97,12 @@ class CampaignService:
                                 agent_id=campaign.agent_id
                             )
                             print(f"📞 LIVE MODE: Call initiated for {contact.phone_number}: {result}")
+                            # Agent status will be updated by the webhook when call completes
                         except Exception as e:
                             print(f"❌ LIVE MODE: Failed to call {contact.phone_number}: {e}")
                             contact.status = "failed"
+                            # UPDATE AGENT STATUS: Set to "failed" when call initiation fails
+                            agent.last_call_status = "failed"
                             db.commit()
                     
                     # Wait between calls to ensure sequential calling
@@ -98,6 +114,8 @@ class CampaignService:
                 except Exception as e:
                     print(f"❌ Error processing call for {contact.phone_number}: {e}")
                     contact.status = "failed"
+                    # UPDATE AGENT STATUS: Set to "failed" on errors
+                    agent.last_call_status = "failed"
                     db.commit()
                     
                     # Still wait before next call even if this one failed
@@ -105,6 +123,12 @@ class CampaignService:
                         wait_time = 5 if self.test_mode else 10
                         print(f"⏳ Waiting {wait_time} seconds before next call...")
                         time.sleep(wait_time)
+
+            # When all calls are done, set agent back to idle if not already updated by webhook
+            if agent.last_call_status == "calling":
+                agent.last_call_status = "idle"
+                db.commit()
+                print(f"Campaign {campaign_id} completed. Agent {agent.id} set back to idle.")
                     
         except Exception as e:
             print(f"Error in _make_calls_sequentially for campaign {campaign_id}: {e}")
