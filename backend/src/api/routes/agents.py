@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from ...core.database import get_db
 from ...models import agent as agent_model
 from ...schemas import agent as agent_schema
+import logging
 
 router = APIRouter()
 
@@ -23,6 +24,7 @@ def create_agent(agent: agent_schema.AgentCreate, db: Session = Depends(get_db))
     db.add(db_agent)
     db.commit()
     db.refresh(db_agent)
+    logging.INFO("A new agent has been created")
     return db_agent
 
 @router.get("/{agent_id}", response_model=agent_schema.Agent)
@@ -32,7 +34,9 @@ def read_agent(agent_id: int, db: Session = Depends(get_db)):
     """
     db_agent = db.query(agent_model.Agent).filter(agent_model.Agent.id == agent_id).first()
     if db_agent is None:
+        logging.ERROR("Agent not found")
         raise HTTPException(status_code=404, detail="Agent not found")
+    logging.INFO(f"agent with the {agent_id} has been retrieved")
     return db_agent
 
 @router.get("/", response_model=List[agent_schema.Agent])

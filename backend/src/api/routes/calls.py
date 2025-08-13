@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, Form, File, UploadFile, HTTPException, Q
 from fastapi.responses import Response # Import Response for returning XML
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from ...utils.logging_func import log_call_event
 
 # --- IMPORT TWILIO'S TwiML BUILDER ---
 from twilio.twiml.voice_response import VoiceResponse, Gather
@@ -64,8 +65,7 @@ async def call_webhook(
     """
     Main webhook to handle call progression. Now returns proper TwiML.
     """
-    print(f"--- WEBHOOK TRIGGERED for CallSid: {CallSid} ---")
-    print(f"Call Status: {CallStatus}, To: {To}")
+    log_call_event(call_sid=CallSid, event=f"WEBHOOK TRIGGERED for CallSid: {CallSid} Call Status: {CallStatus}, To: {To}")
     response = VoiceResponse()
 
     try:
@@ -83,11 +83,11 @@ async def call_webhook(
                 elif CallStatus == 'in-progress':
                     contact.status = 'calling'
                 db.commit()
-                print(f"Updated contact {To} status to {contact.status}")
+                log_call_event(call_sid=CallSid, event=f"Updated contact {To} status to {contact.status}")
 
         db_agent = db.query(agent_model.Agent).filter(agent_model.Agent.id == agent_id).first()
         if not db_agent:
-            print(f"❌ ERROR: Agent with ID {agent_id} not found in webhook.")
+            log_call_event(call_sid=CallSid, event=f"❌ Agent with ID {agent_id} not found in webhook.", level="error")
             response.say("Sorry, an internal error occurred. Goodbye.")
             response.hangup()
             return Response(content=str(response), media_type="application/xml")
@@ -98,40 +98,39 @@ async def call_webhook(
 
         if SpeechResult is None:
             # This is the first webhook hit (user just answered)
-            print("🎙️ No speech result, generating initial greeting...")
             greeting_text = agent.get_initial_greeting()
             response.say(greeting_text)
+            log_call_event(call_sid=CallSid, event="🎙️ No speech result, generated initial greeting...", details={"initial greetings": greeting_text})
             
             # Tell Twilio to listen for the user's response and call this webhook back
             gather = Gather(input='speech', action=f'/api/v1/calls/webhook?agent_id={agent_id}', speechTimeout='auto')
             response.append(gather)
-            print("✅ Responded with greeting and gather instruction.")
+            log_call_event(call_sid=CallSid, event="✅ Responded with greeting and gather instruction.", details={"response": response})
 
         else:
             # The user has spoken, and Twilio has transcribed it
             user_transcript = SpeechResult
-            print(f"🎤 User said: '{user_transcript}'")
+            log_call_event(call_sid=CallSid, event="🎤 User has spoken", details={"user said": user_transcript})
 
             ai_response_text = agent.process_response(user_transcript, conversation_history)
-            print(f"🤖 AI will say: '{ai_response_text}'")
+            log_call_event(call_sid=CallSid, event="🤖 AI will answer", details={"AI response": ai_response_text})
 
             response.say(ai_response_text)
             
             if "goodbye" in ai_response_text.lower():
-                print("🏁 AI said goodbye, responding with Hangup.")
+                log_call_event(call_sid=CallSid, event="🏁 AI said goodbye, responding with Hangup.")
                 response.hangup()
             else:
-                print("👂 Responding with Say and gathering next user input...")
+                log_call_event(call_sid=CallSid, event="👂 Responding with Say and gathering next user input...")
                 gather = Gather(input='speech', action=f'/api/v1/calls/webhook?agent_id={agent_id}', speechTimeout='auto')
                 response.append(gather)
 
         final_twiml = str(response)
-        print(f"➡️  Responding to Twilio with TwiML:\n{final_twiml}")
+        log_call_event(call_sid=CallSid, event=f"➡️  Responding to Twilio with TwiML", details={"Response to Twilio": final_twiml})
         return Response(content=final_twiml, media_type="application/xml")
 
     except Exception as e:
-        print(f"🔥🔥🔥 UNEXPECTED ERROR IN WEBHOOK 🔥🔥🔥")
-        print(f"Error: {e}")
+        log_call_event(call_sid=CallSid, event=f"🔥🔥🔥 UNEXPECTED ERROR IN WEBHOOK 🔥🔥🔥", details={"error": e}, level="error")
         traceback.print_exc()
         
         # Respond with a safe error message to Twilio

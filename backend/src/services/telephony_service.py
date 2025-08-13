@@ -1,6 +1,7 @@
 # backend/src/services/telephony_service.py
 from twilio.rest import Client
 from ..core.config import settings
+import logging
 
 class TwilioService:
     _client = None
@@ -21,11 +22,11 @@ class TwilioService:
                 raise ValueError("Server is not configured for making calls. TWILIO environment variables are missing or empty.")
             
             try:
-                print("Initializing Twilio client...")
+                logging.INFO("Initializing Twilio client...")
                 cls._client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-                print("✅ Twilio client initialized successfully.")
+                logging.INFO("✅ Twilio client initialized successfully.")
             except Exception as e:
-                print(f"❌ Failed to initialize Twilio client: {e}")
+                logging.ERROR(f"❌ Failed to initialize Twilio client: {e}")
                 raise ConnectionError(f"Failed to initialize Twilio client. Check credentials. Error: {e}")
         
         return cls._client
@@ -42,17 +43,17 @@ class TwilioService:
         public_url = settings.PUBLIC_URL 
         
         try:
-            print(f"Attempting to call {to_number} from {settings.TWILIO_PHONE_NUMBER}...")
+            logging.INFO(f"Attempting to call {to_number} from {settings.TWILIO_PHONE_NUMBER}...")
             call = client.calls.create(
                 to=to_number,
                 from_=settings.TWILIO_PHONE_NUMBER,
                 # This is the URL Twilio will call back to our webhook when the user answers.
                 url=f"{public_url}/api/v1/calls/webhook?agent_id={agent_id}"
             )
-            print(f"Successfully initiated call with SID: {call.sid}")
+            logging.INFO(f"Successfully initiated call with SID: {call.sid}")
             return {"status": "success", "call_sid": call.sid}
         except Exception as e:
-            print(f"❌ Twilio call creation failed: {e}")
+            logging.ERROR(f"❌ Twilio call creation failed: {e}")
             # This will cause a 500 error, but the log will show the *real* reason
             # from Twilio (e.g., "The 'To' number is not a valid phone number").
             raise e
