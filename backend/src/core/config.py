@@ -2,7 +2,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding='utf-8')
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     # Database
     DATABASE_URL: str
@@ -18,12 +18,13 @@ class Settings(BaseSettings):
     TWILIO_ACCOUNT_SID: str
     TWILIO_AUTH_TOKEN: str
     TWILIO_PHONE_NUMBER: str
-    
+
     # App
     SECRET_KEY: str
     AUDIO_DIR: str
-    # --- ADD THIS LINE ---
-    PUBLIC_URL: str
-    # ---------------------
+    PUBLIC_URL: str   # ✅ added earlier
+
+    # Misc
+    TEST_MODE: bool = False   # ✅ new line
 
 settings = Settings()
