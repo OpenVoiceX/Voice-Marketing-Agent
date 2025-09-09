@@ -21,6 +21,7 @@
             <td><b>🐛 Issues</b></td>
             <td><b>🔔 Open PRs</b></td>
             <td><b>🔕 Closed PRs</b></td>
+            <td><b>⏱️ Last Commit</b></td>
             <td><b>🛠️ Languages</b></td>
             <td><b>👥 Contributors</b></td>
         </tr>
@@ -32,6 +33,7 @@
             <td><img alt="Issues" src="https://img.shields.io/github/issues/OpenVoiceX/Voice-Marketing-Agent?style=flat&logo=github"/></td>
             <td><img alt="Open PRs" src="https://img.shields.io/github/issues-pr/OpenVoiceX/Voice-Marketing-Agent?style=flat&logo=github"/></td>
             <td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/OpenVoiceX/Voice-Marketing-Agent?style=flat&color=critical&logo=github"/></td>
+             <td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/OpenVoiceX/Voice-Marketing-Agent?style=flat&color=critical&logo=github"/></td>
             <td><img alt="Languages Count" src="https://img.shields.io/github/languages/count/OpenVoiceX/Voice-Marketing-Agent?style=flat&color=green&logo=github"></td>
             <td><img alt="Contributors Count" src="https://img.shields.io/github/contributors/OpenVoiceX/Voice-Marketing-Agent?style=flat&color=blue&logo=github"/></td>
         </tr>
