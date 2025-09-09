@@ -1,6 +1,6 @@
 <!-- GSSoC banner and project insights -->
 <h1 align="center">
-  <img width="64" height="64" alt="LegalHuB Logo" src="frontend/logo.png"/>
+  <img width="64" height="64" alt="Voice-Marketing-Agent logo" src="frontend/logo.png"/>
   <br>
   Voice-Marketing-Agent
 </h1>
@@ -42,7 +42,7 @@
   <img src="frontend/logo.png" alt="Voice Marketing Agents Logo" width="200"/>
 </p>
 
-<h1 align="center">Voice Marketing Agents 🤖</h1>
+<h2 align="center">Voice Marketing Agents 🤖</h2>
 
 <p align="center">
   <strong>An open-source framework to build and deploy intelligent, self-hosted AI agents that can handle real-world phone calls.</strong>
