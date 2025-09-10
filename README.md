@@ -1,8 +1,50 @@
+<!-- GSSoC banner and project insights -->
+<h1 align="center">
+  <img width="64" height="64" alt="Voice-Marketing-Agent logo" src="frontend/logo.png"/>
+  <br>
+  Voice-Marketing-Agent
+</h1>
+
 <p align="center">
-  <img src="https://github.com/Hiteshydv001/Voice-Marketing-Agent/blob/main/docs/logo.png" alt="Voice Marketing Agents Logo" width="200"/>
+  <b>This project is now OFFICIALLY accepted for:</b>
 </p>
 
-<h1 align="center">Voice Marketing Agents 🤖</h1>
+<div align="center">
+  <img src="frontend/gssoc.png" alt="GSSOC" width="80%">
+</div>
+
+<table align="center">
+    <thead align="center">
+        <tr>
+            <td><b>🌟 Stars</b></td>
+            <td><b>🍴 Forks</b></td>
+            <td><b>🐛 Issues</b></td>
+            <td><b>🔔 Open PRs</b></td>
+            <td><b>🔕 Closed PRs</b></td>
+            <td><b>⏱️ Last Commit</b></td>
+            <td><b>🛠️ Languages</b></td>
+            <td><b>👥 Contributors</b></td>
+        </tr>
+     </thead>
+    <tbody>
+         <tr>
+            <td><img alt="Stars" src="https://img.shields.io/github/stars/OpenVoiceX/Voice-Marketing-Agent?style=flat&logo=github"/></td>
+            <td><img alt="Forks" src="https://img.shields.io/github/forks/OpenVoiceX/Voice-Marketing-Agent?style=flat&logo=github"/></td>
+            <td><img alt="Issues" src="https://img.shields.io/github/issues/OpenVoiceX/Voice-Marketing-Agent?style=flat&logo=github"/></td>
+            <td><img alt="Open PRs" src="https://img.shields.io/github/issues-pr/OpenVoiceX/Voice-Marketing-Agent?style=flat&logo=github"/></td>
+            <td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/OpenVoiceX/Voice-Marketing-Agent?style=flat&color=critical&logo=github"/></td>
+             <td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/OpenVoiceX/Voice-Marketing-Agent?style=flat&color=critical&logo=github"/></td>
+            <td><img alt="Languages Count" src="https://img.shields.io/github/languages/count/OpenVoiceX/Voice-Marketing-Agent?style=flat&color=green&logo=github"></td>
+            <td><img alt="Contributors Count" src="https://img.shields.io/github/contributors/OpenVoiceX/Voice-Marketing-Agent?style=flat&color=blue&logo=github"/></td>
+        </tr>
+    </tbody>
+</table>
+
+<p align="center">
+  <img src="frontend/logo.png" alt="Voice Marketing Agents Logo" width="200"/>
+</p>
+
+<h2 align="center">Voice Marketing Agents 🤖</h2>
 
 <p align="center">
   <strong>An open-source framework to build and deploy intelligent, self-hosted AI agents that can handle real-world phone calls.</strong>
