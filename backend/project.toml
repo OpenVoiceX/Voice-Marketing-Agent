@@ -1,0 +1,68 @@
+[tool.black]
+line-length = 120
+target-version = ['py311']
+include = '\.pyi?
+#!/bin/bash
+
+# Test runner script for CI/CD
+
+set -e
+
+echo "🧪 Starting Voice Marketing Agents Test Suite"
+echo "=============================================="
+
+# Check if we're in a virtual environment
+if [[ -z "${VIRTUAL_ENV}" ]]; then
+    echo "⚠️  Warning: Not running in a virtual environment"
+fi
+
+# Install test dependencies
+echo "📦 Installing test dependencies..."
+pip install -r requirements-dev.txt
+
+# Run code formatting checks
+echo "🎨 Checking code formatting..."
+black --check src tests || {
+    echo "❌ Code formatting issues found. Run 'make format' to fix."
+    exit 1
+}
+
+# Run import sorting checks
+echo "📚 Checking import sorting..."
+isort --check-only src tests || {
+    echo "❌ Import sorting issues found. Run 'make format' to fix."
+    exit 1
+}
+
+# Run linting
+echo "🔍 Running linting..."
+flake8 src tests || {
+    echo "❌ Linting issues found."
+    exit 1
+}
+
+# Run unit tests
+echo "⚡ Running unit tests..."
+pytest tests/ -v --tb=short --cov=src --cov-report=term-missing --cov-fail-under=80
+
+echo ""
+echo "✅ All tests passed!"
+echo "📊 Coverage report generated in htmlcov/"
+echo "🎉 Voice Marketing Agents is ready for deployment!"
+
+extend-exclude = '''
+/(
+  migrations
+  | \.pytest_cache
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+skip_glob = ["migrations/*"]
