@@ -21,6 +21,11 @@ export const createAgent = (agentData) => {
   return apiClient.post('/agents/', agentData);
 };
 
+export const getAgentOptions = async () => {
+  const response = await apiClient.get('/agents/options/config');
+  return response.data;
+};
+
 // --- ADD THIS NEW FUNCTION ---
 export const originateCall = (agentId, phoneNumber) => {
   return apiClient.post('/calls/originate', {

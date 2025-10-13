@@ -13,19 +13,12 @@ from twilio.twiml.voice_response import VoiceResponse, Gather
 # -------------------------------------
 
 from ...core.database import get_db
-from ...services.llm_service import LLMService
-from ...services.stt_service import STTService
-from ...services.tts_service import TTSService
+from ...services.service_factory import service_factory
 from ...services.telephony_service import twilio_service
 from ...agents.appointment_setter.logic import AppointmentSetterAgent
 from ...models import agent as agent_model, campaign as campaign_model
 
 router = APIRouter()
-
-# Service Initialization
-stt_service = STTService()
-tts_service = TTSService()
-llm_service = LLMService()
 
 class OriginateCallRequest(BaseModel):
     to_number: str
@@ -63,9 +56,10 @@ async def call_webhook(
 ):
     """
     Main webhook to handle call progression. Now returns proper TwiML.
+    Uses agent-specific service configurations for LLM, TTS, and STT.
     """
     print(f"--- WEBHOOK TRIGGERED for CallSid: {CallSid} ---")
-    print(f"Call Status: {CallStatus}, To: {To}")
+    print(f"Call Status: {CallStatus}, To: {To}, Agent ID: {agent_id}")
     response = VoiceResponse()
 
     try:
@@ -85,6 +79,7 @@ async def call_webhook(
                 db.commit()
                 print(f"Updated contact {To} status to {contact.status}")
 
+        # Fetch agent configuration
         db_agent = db.query(agent_model.Agent).filter(agent_model.Agent.id == agent_id).first()
         if not db_agent:
             print(f"❌ ERROR: Agent with ID {agent_id} not found in webhook.")
@@ -92,6 +87,17 @@ async def call_webhook(
             response.hangup()
             return Response(content=str(response), media_type="application/xml")
 
+        # Create agent-specific services based on configuration
+        print(f"🔧 Initializing services for agent {agent_id}:")
+        print(f"   LLM: {db_agent.llm_provider} ({db_agent.llm_model})")
+        print(f"   TTS Voice: {db_agent.tts_voice_id}")
+        print(f"   STT: {db_agent.stt_provider}")
+        
+        services = service_factory.create_services_for_agent(db_agent)
+        llm_service = services['llm']
+        tts_service = services['tts']
+        stt_service = services['stt']
+        
         agent = AppointmentSetterAgent(llm_service=llm_service, system_prompt=db_agent.system_prompt)
         
         conversation_history = [] # In a real app, you'd store and retrieve this from the DB based on CallSid

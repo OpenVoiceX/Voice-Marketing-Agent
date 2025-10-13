@@ -47,7 +47,9 @@ class TwilioService:
                 to=to_number,
                 from_=settings.TWILIO_PHONE_NUMBER,
                 # This is the URL Twilio will call back to our webhook when the user answers.
-                url=f"{public_url}/api/v1/calls/webhook?agent_id={agent_id}"
+                url=f"{public_url}/api/v1/calls/webhook?agent_id={agent_id}",
+                # Send digits to skip trial message (press any key to continue)
+                send_digits="w"
             )
             print(f"Successfully initiated call with SID: {call.sid}")
             return {"status": "success", "call_sid": call.sid}

@@ -1,5 +1,6 @@
 // frontend/src/components/AgentCard.jsx
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { originateCall } from '../services/callApi';
 import Button from './common/Button';
 import Input from './common/Input';
@@ -35,7 +36,14 @@ const AgentCard = ({ agent }) => {
 
   return (
     <div className="card" style={{ marginBottom: '1rem' }}>
-      <h3>{agent.name}</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h3>{agent.name}</h3>
+        <Link to={`/agents/${agent.id}`}>
+          <button className="btn" style={{ background: '#6c63ff', color: 'white', padding: '0.5rem 1rem' }}>
+            View Details
+          </button>
+        </Link>
+      </div>
       <p><strong>Agent ID:</strong> {agent.id}</p>
       <div style={{ margin: '1rem 0' }}>
         <Input

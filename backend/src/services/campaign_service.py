@@ -7,13 +7,16 @@ from sqlalchemy.orm import Session
 from ..models import campaign as campaign_model
 from ..schemas import campaign as campaign_schema
 from .telephony_service import twilio_service
+from .service_factory import service_factory
 
 class CampaignService:
     def __init__(self):
         # Check if we're in test mode (for development)
-        self.test_mode = os.getenv('TEST_MODE', 'true').lower() == 'true'
+        self.test_mode = os.getenv('TEST_MODE', 'false').lower() == 'true'
         if self.test_mode:
             print("🧪 Running in TEST MODE - calls will be simulated")
+        else:
+            print("🚀 Running in LIVE MODE - real calls will be made")
 
     def run_campaign(self, db: Session, campaign_id: int):
         """
@@ -40,8 +43,10 @@ class CampaignService:
         """
         Internal method to make calls to all contacts in a campaign sequentially.
         This runs in a separate thread and calls contacts one by one with delays.
+        Uses agent-specific service configurations for each campaign.
         """
         from ..core.database import SessionLocal
+        from ..models import agent as agent_model
         
         db = SessionLocal()
         try:
@@ -50,8 +55,18 @@ class CampaignService:
                 print(f"Campaign {campaign_id} not found in _make_calls_sequentially")
                 return
 
+            # Get agent configuration for this campaign
+            agent = db.query(agent_model.Agent).filter(agent_model.Agent.id == campaign.agent_id).first()
+            if not agent:
+                print(f"❌ Agent {campaign.agent_id} not found for campaign {campaign_id}")
+                return
+            
             print(f"Starting sequential calls to {len(campaign.contacts)} contacts for campaign {campaign_id}")
             print(f"Mode: {'TEST (simulated)' if self.test_mode else 'LIVE'}")
+            print(f"🔧 Agent Configuration:")
+            print(f"   LLM: {agent.llm_provider} ({agent.llm_model})")
+            print(f"   TTS Voice: {agent.tts_voice_id}")
+            print(f"   STT: {agent.stt_provider}")
             
             for i, contact in enumerate(campaign.contacts):
                 try:
@@ -77,13 +92,14 @@ class CampaignService:
                         
                         db.commit()
                     else:
-                        # LIVE MODE: Make actual Twilio calls
+                        # LIVE MODE: Make actual Twilio calls with agent-specific settings
                         try:
                             result = twilio_service.originate_call(
                                 to_number=contact.phone_number, 
-                                agent_id=campaign.agent_id
+                                agent_id=campaign.agent_id  # Twilio will use agent config via webhook
                             )
-                            print(f"📞 LIVE MODE: Call initiated for {contact.phone_number}: {result}")
+                            print(f"📞 LIVE MODE: Call initiated for {contact.phone_number} with agent config")
+                            print(f"   Using: {agent.llm_provider}/{agent.llm_model}, Voice: {agent.tts_voice_id[:8]}..., STT: {agent.stt_provider}")
                         except Exception as e:
                             print(f"❌ LIVE MODE: Failed to call {contact.phone_number}: {e}")
                             contact.status = "failed"

@@ -1,18 +1,19 @@
-# Application Framework
+give # Application Framework
 fastapi
 uvicorn[standard]
 python-dotenv
 pydantic-settings
 python-multipart
+websockets
 
 # Database
 sqlalchemy
-psycopg2-binary
 
-# AI Service Libraries
-ollama
-faster-whisper
-TTS
+# AI Service Libraries - Cloud APIs
+google-generativeai
+groq
+elevenlabs
+deepgram-sdk
 
 # Telephony
 twilio

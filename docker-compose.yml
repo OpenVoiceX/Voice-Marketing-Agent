@@ -1,4 +1,6 @@
 # docker-compose.yml
+# Cloud-based AI Voice Marketing Agent
+# Uses Gemini, Groq, and ElevenLabs APIs (no local models)
 
 services:
   api:
@@ -12,19 +14,16 @@ services:
     env_file:
       - .env
     command: uvicorn src.main:app --host 0.0.0.0 --port 8000
-    mem_limit: 4g
+    mem_limit: 2g
     depends_on:
-      # The API now only explicitly waits for the database.
-      # It will wait for Ollama in its own code.
       db:
         condition: service_healthy
     healthcheck:
-      # This healthcheck is still good. It tells us when the whole app is ready.
       test: ["CMD-SHELL", "curl -f http://localhost:8000/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 300s # Keep this generous for model downloads
+      start_period: 60s
 
   dashboard:
     build: ./frontend
@@ -50,17 +49,6 @@ services:
       timeout: 5s
       retries: 5
 
-  ollama:
-    image: ollama/ollama
-    container_name: voice-marketing-agent-ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-    # --- WE HAVE REMOVED THE HEALTHCHECK FROM OLLAMA ENTIRELY ---
-    # Our Python backend is now responsible for waiting for it.
-
 volumes:
   postgres_data:
-  ollama_data:
   shared_audio:
