@@ -14,6 +14,14 @@
   <img src="frontend/gssoc.png" alt="GSSOC" width="80%">
 </div>
 
+<div align="center">
+  <img src="https://hacktoberfest.com/_next/static/media/logo-hacktoberfest--horizontal.e2dab54d.svg" alt="Hacktoberfest" width="80%">
+</div>
+
+<p align="center">
+  <strong>🎉 Participating in GSSOC'25 & Hacktoberfest 2025! 🎉</strong>
+</p>
+
 <p align="center">
   <img src="frontend/logo.png" alt="Voice Marketing Agents Logo" width="200"/>
 </p>

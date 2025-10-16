@@ -1,4 +1,4 @@
-**🌟 Code of Conduct | Voice-Marketing-Agent (GSSoC'25)**
+**🌟 Code of Conduct | Voice-Marketing-Agent (GSSoC'25 & Hacktoberfest 2025)**
 
 **📜 Our Pledge**
 
@@ -26,18 +26,27 @@ We are committed to fostering an inclusive, harassment-free environment for all 
 
 ---
 
+***🎃 Hacktoberfest 2025 Rewards***
+
+**Participants in Hacktoberfest can earn:**
+- **Digital Badge** for registration and participation
+- **Exclusive T-Shirt** for first 10,000 contributors with 6 accepted PRs
+- **Tree Planting** via TreeNation for every 6th PR reward
+
+---
+
 **💡 Contribution Guidelines**
 ✅ Follow the Code of Conduct.
-✅ Check GitHub Issues (labeled GSSoC'25) for tasks.
-✅ Points are awarded based on merged PRs (Easy: 4, Medium: 7, Hard: 10).
+✅ Check GitHub Issues (labeled GSSoC'25 or hacktoberfest) for tasks.
+✅ Points are awarded based on merged PRs (GSSoC) or accepted PRs (Hacktoberfest).
 ✅ Do not spam maintainers—be patient for PR reviews.
 
 ---
 
 ***Important Points***
-✅ Points are awarded only after PRs are merged
-✅ Always follow our Code of Conduct 
-✅ Check GitHub issues labeled GSSoC'25 for approved tasks
+✅ Points/Rewards are awarded only after PRs are merged/accepted
+✅ Always follow our Code of Conduct
+✅ Check GitHub issues labeled GSSoC'25 or hacktoberfest for approved tasks
 ✅ Be patient for PR reviews - avoid spamming maintainers
 
 ---
@@ -73,7 +82,7 @@ Violations will be addressed by maintainers and may result in:
 This Code of Conduct draws inspiration from the [Contributor Covenant (v3.0)](https://www.contributor-covenant.org/version/3/0/code_of_conduct/), thoughtfully adapted for Voice-Marketing-Agent with:
 
 - 🔊 Voice-Tech Specific guidelines for ethical AI development
-- 🎙️ GSSoC'25 Optimized collaboration standards
+- 🎙️ GSSoC'25 & Hacktoberfest 2025 Optimized collaboration standards
 - 🤖 Future-Forward practices for inclusive innovation
 
 📌 Original work License under Creative Commons Attribution 4.0 International [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) license while adding our unique vocal fingerprint to open source ethics.
@@ -82,3 +91,4 @@ This Code of Conduct draws inspiration from the [Contributor Covenant (v3.0)](ht
 
 ***Let’s build a project that’s as respectful as it is innovative! 🌍💻***
 ***🚀 Join Our Chorus of ethical contributors shaping the future of voice AI!***
+***🎉 Proud participant in GSSoC 2025 & Hacktoberfest 2025! 🎉***

@@ -1,9 +1,9 @@
-# 🌟 Your First Open Source Contribution Starts Here – GSSoC 2025 Beginner's Guide 💻✨
+# 🌟 Your First Open Source Contribution Starts Here – GSSoC 2025 & Hacktoberfest 2025 Beginner's Guide 💻✨
 
 
-Are you selected for **GSSoC** and wondering:
+Are you selected for **GSSoC** or participating in **Hacktoberfest** and wondering:
 
-*How do I even begin contributing to open source?* Well, buckle up, rookie dev — you're about to become an OSS warrior. Let’s make this GSSoC journey memorable together! See you on the battlefield, coder ⚔️
+*How do I even begin contributing to open source?* Well, buckle up, rookie dev — you're about to become an OSS warrior. Let’s make this journey memorable together! See you on the battlefield, coder ⚔️
 
 [Hitesh Kumar](https://www.linkedin.com/in/hitesh-kumar-aiml/)  
 *Project Admin | OSS Enthusiast*
@@ -18,7 +18,7 @@ Are you selected for **GSSoC** and wondering:
 - [GSSoC 2025 Contributor Onboarding | Complete Guide to Getting Started](https://youtu.be/It76LBC3Ils?si=iyVdhPUarbi43Eps)
 - [How to contribute to open source projects (our community project walkthrough)](https://youtu.be/dLRA1lffWBw?si=R6YlU-YaMXw4kCFq)
 
-> **Important:** If you’re stuck with an issue, contact mentors and Project Admins.
+> **Important:** If you're stuck with an issue, contact mentors and Project Admins.
 
 ---
 
@@ -30,6 +30,17 @@ Are you selected for **GSSoC** and wondering:
 ✅ Raise PRs  
 ✅ Get reviews  
 ✅ And grow as a dev 💪
+
+---
+
+## 🎃 What Is Hacktoberfest?
+
+**Hacktoberfest** is a month-long celebration of open source software organized by DigitalOcean. It's an excellent opportunity for developers to contribute to open source projects and learn new skills.
+
+✅ Register anytime between September 15 - October 31  
+✅ Submit 6 high-quality pull/merge requests between October 1-31  
+✅ Get rewards like digital badges and T-shirts  
+✅ Join a global community of contributors
 
 ---
 
@@ -105,7 +116,7 @@ Go to your GitHub fork → Click **Compare & pull request**.
 
 - Mention the issue number: `Fixes #123`
 - Describe your changes
-- Mention you’re a **GSSoC'25** participant
+- Mention you're a **GSSoC'25** or **Hacktoberfest 2025** participant
 
 ### Step 8: Engage with Reviews
 
@@ -118,14 +129,53 @@ git commit --amend
 
 ---
 
-## ✅ Best Practices for GSSoC Contributors
+## 🎃 Hacktoberfest Participation Guide
 
-| ✅ Do This | ❌ Don’t Do This |
+### Getting Started with Hacktoberfest
+
+1. **Register:** Sign up at [hacktoberfest.com](https://hacktoberfest.com) between September 15 - October 31
+2. **Find Projects:** Look for repositories with the `hacktoberfest` topic on GitHub
+3. **Contribute:** Submit 6 quality PRs/MRs between October 1-31
+4. **Earn Rewards:** Get digital badges and potentially a T-shirt!
+
+### Hacktoberfest Rules
+
+| **Rule** | **Details** |
+|----------|-------------|
+| **Quality Over Quantity** | Focus on meaningful contributions, not spam |
+| **Repository Requirements** | PRs must be in repos with `hacktoberfest` topic or `hacktoberfest-accepted` label |
+| **PR Status** | PRs must be merged, have approving review, or `hacktoberfest-accepted` label |
+| **No Spam** | Maintainers can mark PRs as spam - avoid low-quality contributions |
+| **Timeline** | October 1-31 for contributions, register by October 31 |
+
+### Hacktoberfest Rewards
+
+- **Digital Badge:** Earn a unique badge for participating
+- **T-Shirt:** First 10,000 contributors with 6 accepted PRs get exclusive swag
+- **Tree Planting:** Every 6th PR reward includes a tree planted via TreeNation
+- **Community:** Join thousands of contributors worldwide
+
+### Tips for Hacktoberfest Success
+
+✅ **Start Early:** Register in September and explore projects  
+✅ **Quality First:** Focus on well-scoped, meaningful contributions  
+✅ **Read Guidelines:** Check each repository's CONTRIBUTING.md  
+✅ **Communicate:** Ask questions in issues before starting work  
+✅ **Be Patient:** Wait for maintainer reviews - they volunteer their time  
+
+---
+
+## ✅ Best Practices for Contributors
+
+| ✅ Do This | ❌ Don't Do This |
 |-----------|------------------|
 | Ask to get assigned to the issue | Submit PRs without assignment |
-| Follow the repo’s coding style | Mix your own formatting |
+| Follow the repo's coding style | Mix your own formatting |
 | Be respectful in PRs/comments | Spam issues/PRs for points |
 | Start small — Level 1 issues | Try Level 3 bugs on Day 1 |
+| Test your changes locally | Submit untested code |
+| Write clear commit messages | Use vague messages like "fix" |
+| Update documentation | Ignore docs when changing code |
 
 ---
 
@@ -451,4 +501,5 @@ By contributing to Voice Marketing Agent, you agree that your contributions will
 <div align="center">
   <p><strong>Thank you for helping make Voice Marketing Agent better! 🚀</strong></p>
   <p>Built with ❤️ and a lot of coffee by the open-source community</p>
+  <p>🎉 Proud participant in <strong>GSSoC 2025</strong> & <strong>Hacktoberfest 2025</strong> 🎉</p>
 </div>
